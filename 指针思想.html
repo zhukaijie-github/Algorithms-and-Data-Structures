@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title></title>
+  </head>
+  <body>
+    <div></div>
+    <script>
+      /* 
+      字符串aaaaabbbbbbcccccdddddeeeee
+      输出字符串中连续出现次数最多的字母以及次数
+      指针: i j 
+          aaaaabbbbbbcccccdddddeeeee 
+          ↑    ↑
+          i    j
+      指针依次往后，判断 j 指针指向的值是否与 i 指针指向的是否相同
+      1. 如果相同什么都不做继续往后
+      2. 如果不相同说明i 和 j 之间的数都是相同的，则出现重复的次数是 j - i , 重复的字母是str[i]
+         关键点此时 i = j ,就是把 i 的位置拉到j的位置上，检测下面的
+     */
+
+      function SearchMaxCountWord(str) {
+        // 指针1
+        let i = 0;
+        // 指针2
+        let j = 1;
+        // 当前最大次数
+        let maxCount = 0;
+        // 当前最大次数相对应的字母
+        let currentMaxWord = "";
+
+        // 遍历
+        while (j < str.length) {
+          if (str[i] !== str[j]) {
+            // 当i指向的值和j指向的值不相等时候
+            if (j - i > maxCount) {
+              // 当前数量大于已有最大值时候，更新最大值和字母
+              maxCount = j - i;
+              currentMaxWord = str[i];
+            }
+            // 将i 的位置拉到j的位置上进行下一个操作
+            i = j;
+          }
+          j++;
+        }
+
+        return {
+          key: currentMaxWord,
+          count: maxCount,
+        };
+      }
+
+      const str = "aaaaabbbbbbcccccdddddeeeee";
+      const str1 = "fffffffffaaaaabbbbbbcccccdddddeeeee";
+      console.log(SearchMaxCountWord(str));
+      console.log(SearchMaxCountWord(str1));
+    </script>
+  </body>
+</html>

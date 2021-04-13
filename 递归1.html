@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div></div>
+
+    <script>
+      /* 
+      将数组 [1,2,[3,4],5]
+      转换成 {
+        children: [
+          {
+            value: 1
+          },
+          {
+            value: 2
+          },
+          {
+            children: [
+              {
+                value: 3
+              },
+              {
+                value: 4
+              }
+            ]
+          },
+          {
+            value: 5
+          }
+        ]
+      }
+    
+    */
+
+      /* 方法1 参数arr为数组 */
+      function complie(arr) {
+        if (!Array.isArray(arr)) throw "参数arr必须为数组";
+        let result = [];
+        for (let i = 0; i < arr.length; i++) {
+          if (Array.isArray(arr[i])) {
+            result.push({
+              children: complie(arr[i]),
+            });
+          } else {
+            result.push({
+              value: arr[i],
+            });
+          }
+        }
+        return result;
+      }
+
+      console.log({
+        children: complie([1, 2, [3, 4], 5]),
+      });
+
+      /* 方法2 参数item可能是数组也可能是数字 */
+      function compile2(item) {
+        if (Array.isArray(item)) {
+          // 是数组，利用map高阶函数处理子项
+          return {
+            children: item.map((_item) => compile2(_item)),
+          };
+        } else {
+          // 不是数组
+          return {
+            value: item,
+          };
+        }
+      }
+
+      console.log(compile2([1, 2, [3, 4], 5]));
+    </script>
+  </body>
+</html>

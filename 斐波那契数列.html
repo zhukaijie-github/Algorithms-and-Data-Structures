@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      /* 
+        输出10项斐波那契数列
+        0,1,1,2,3,5,8,13,21,44
+        0,1,2,3,4,5,6,7,8,9
+        1. 用到递归思想
+        2. 这个数列从第3项开始，每一项都等于前两项之和。
+           f(n) = f(n-1) + f(n-2)
+        3. 优化策略，把已经计算过的数值缓存起来
+      */
+
+      function sequence(num) {
+        // 缓存器
+        let cache = {};
+
+        // 递归函数
+        function die(n) {
+          // console.count("计数");
+          // console.log(cache);
+          // 定义值变量
+          let val;
+          // 检测当前n项的值是否在缓存对象中，通过自身属性检测来实现
+          if (cache.hasOwnProperty(n)) {
+            // 在缓存属性中，就直接返回
+            val = cache[n];
+          } else {
+            val = n === 0 || n === 1 ? n : die(n - 1) + die(n - 2);
+            // 不在缓存中，就更新新属性
+            cache[n] = val;
+          }
+
+          return val;
+        }
+
+        let list = [];
+
+        // 循环 num 就是要输出多少项
+        for (let i = 0; i < num; i++) {
+          list.push(die(i));
+        }
+
+        return list.join(",");
+      }
+
+      console.log(sequence(10));
+      console.log(sequence(20));
+      console.log(sequence(30));
+    </script>
+  </body>
+</html>

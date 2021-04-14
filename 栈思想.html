@@ -23,13 +23,74 @@
          (1). 创建两个变量数组（栈），一个记录数字，一个记录字母，
          (2). 依次循环遍历字符串
          (3). 判断依据
-                      如果碰到数字，则向数字栈进栈当前数字
-                      如果碰到[ , 则向字母栈进栈一个空字符，作为占位
+                      如果碰到数字，则向数字栈进栈当前数字, 字母栈进栈一个空字符, 指针++后再加1（1就是[）
                       如果碰到字母，则字母栈的最后一项改成当前字母
-                      如果碰到] , 则将字母栈的最后一项弹出栈，数字栈的最后一项弹出，并将弹出的字母和弹出的数字转换成对应重复的字符，并将改字符赋值给栈的顶项
+                      如果碰到] , 则将字母栈的顶项弹出栈，数字栈的顶项弹出，并将弹出的字母和弹出的数字转换成对应重复的字符，并将字符和字母栈的顶栈字符拼接起来
          (4). 最后两个栈中都只剩下一项，将数字和字母转换成对应重复的字符
     
     */
+
+      function smateRepeat(str) {
+        if (typeof str !== "string") {
+          throw "参数必须为字符串";
+        }
+
+        // 数字栈
+        const stack1 = [];
+        // 字母栈
+        const stack2 = [];
+
+        let i = 0;
+
+        // 剩余部分
+        let rest = str;
+
+        // 利用正则来匹配是否是数字和 [ 开头的
+        const numberExp = /^(\d+)\[/;
+        // 利用正则来匹配是否是任意字符和 ] 开头的
+        const wordExp = /^(\w+)\]/;
+        // 让i指向最后一项，最后一项肯定是 ] 符号
+        while (i < str.length - 1) {
+          if (numberExp.test(rest)) {
+            // 匹配到了数字和[开头
+            // 正则中用（）捕获了数字，所有match返回的第二项就是我们要的数字
+            let num = rest.match(numberExp)[1];
+            // 将数字压栈
+            stack1.push(Number(num));
+            // 空字符串压栈
+            stack2.push("");
+            // 加1 是加的[ 的位置, 因为匹配到的是包含[的
+            i += num.toString().length + 1;
+            // 重新计算剩余部分, 注意要使用 原字符串 来切割
+            rest = str.substring(i);
+          } else if (wordExp.test(rest)) {
+            let word = rest.match(wordExp)[1];
+            // 将字母栈的顶栈变成当前所捕获到的数字
+            stack2[stack2.length - 1] = word;
+            // 加1 是加的 ] 的位置
+            i += word.toString().length + 1;
+
+            // 重点，1. 字母顶栈弹出，2. 数字将顶栈弹出，3. 将字母的重复数字的字符和字母栈的顶栈字符拼接在一起，（字符串重复使用repeat方法）
+
+            let num_pop = stack1.pop();
+            let word_pop = stack2.pop();
+            // 将字符拼接在一起
+            stack2[stack2.length - 1] += word_pop.repeat(num_pop);
+
+            // 重新计算剩余部分, 注意要使用 原字符串 来切割
+            rest = str.substring(i);
+            // console.log(rest);
+          } else {
+            // console.log(rest);
+            i++;
+          }
+        }
+
+        // 到最后两个栈中都剩下一项
+        return stack2[0].repeat(stack1[0]);
+      }
+
+      console.log(smateRepeat("33[1[7a]2[b]]"));
     </script>
   </body>
 </html>
